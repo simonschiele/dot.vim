@@ -1,0 +1,28 @@
+"
+" Simons "smallscreen" vim config
+"
+" use when you only have a tiny screen. Launcher can be found in bin/.
+"
+" https://github.com/simonschiele/dot.vim
+"
+
+" todo: check all options of 'shortmess'
+" todo: softtabs: 2 spaces
+" todo: think about internal fonts (airline? nerdtree?)
+" todo: (airline? nerdtree?)
+" todo: strip down statusline
+" todo: think about statusline=1
+" todo: think about auto loading instead of dedicated launcher (by screen resolution?)
+" todo: think about moving to plugin
+
+" First load normal workstation-vim config
+if filereadable(expand("~/.vim/vimrc"))
+    source ~/.vim/vimrc
+endif
+
+" A bit weird settings for split windows. all of them are always minimized to
+" one line, except the active one. and you can switch nicely...
+" While I consider this strange behavior on a workstation, it is actually
+" really cool if you have limited screen-space.
+set winminheight=0
+set winheight=999
