@@ -1,0 +1,36 @@
+"
+" Simons "bigfile" vim config
+"
+" use for huge files. Launcher can be found in bin/.
+"
+" https://github.com/simonschiele/dot.vim
+"
+
+" todo: think about swapfile if not enough memory, maybe toggle with indicator
+" todo: useful statusline for the purpose
+" todo: think about auto loading instead of dedicated launcher
+" todo: think about moving to plugin
+
+set nocursorcolumn
+set nocursorline
+
+set synmaxcol=200
+syntax sync minlines=256
+syntax off
+
+set ttyfast
+set ttyscroll=3
+set lazyredraw
+set nowrap
+
+set eventignore+=FileType
+set bufhidden=unload
+set undolevels=-1
+set noswapfile
+
+if has('gui_running')
+    set guioptions-=T   " no toolbar
+    set guioptions-=m   " no menubar
+    set guioptions-=r   " no right scrollbar
+    set guioptions-=L   " no left scrollbar
+endif
