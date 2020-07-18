@@ -1,0 +1,43 @@
+"
+" Simons "clean" vim config
+"
+" use when you developing vim plugins or want to "verify whatever". Not a
+" blank version but a minimal configured version of vim.
+"
+" This config has no own settings. Instead it uses pathogen to load all the
+" plugins in plugins/clean/. By default it only includes tpope's vim-sensible,
+" which brings halfway sane default settings.
+"
+" https://github.com/simonschiele/dot.vim
+"
+
+" {{{ Plugin loader: pathogen
+
+" Use pathogen to load further modules from the plugins/clean/ directory.
+
+if has('vim_starting')
+    filetype off
+    runtime plugins/pathogen/autoload/pathogen.vim
+
+    " Vim sessions default to capturing all global options, which includes the
+    " 'runtimepath' that pathogen.vim manipulates. This can cause other
+    " problems too, so tpope recommends turning that behavior off. "[...]
+    " though that has the side effect of not persisting any global options,
+    " which may or may not be acceptable to you"
+    set sessionoptions-=options
+
+    " skip loading of specific plugin
+    " can be also done via env variable $VIMBLACKLIST
+    "
+    " let g:pathogen_disabled = []
+    " call add(g:pathogen_disabled, 'YouCompleteMe')
+
+    " actually initalize pathogen with the plugin dirs
+    silent! call pathogen#infect('plugins/clean/{}')
+endif
+
+" }}}
+
+set encoding=utf-8
+
+" vim: set tw=80 ft=vim fdm=marker
