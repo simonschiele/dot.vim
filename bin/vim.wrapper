@@ -1,0 +1,174 @@
+#!/bin/bash
+
+LANG=C
+set -e
+
+function strip_path() {
+    local i
+
+    for i in $* ; do
+        basename "$i"
+    done
+}
+
+function get_vim_config_dirs() {
+    local d
+
+    for d in "$home_dir"/{.,}vim \
+         "$home_dir"/.config/{.,}vim \
+         "$home_dir"/.private/{.,}vim \
+         "$home_dir"/.work/{.,}vim ; do
+        if [[ -d "$d" ]] ; then
+            echo "$d"
+        fi
+    done
+}
+
+function get_vim_bin_dirs() {
+    local d
+
+    for d in $( get_vim_config_dirs ) ; do
+        if [[ -d "$d"/bin ]] ; then
+            echo "$d"/bin
+        fi
+    done
+}
+
+function get_vim_launchers() {
+    local d j
+
+    for d in $( get_vim_bin_dirs ) ; do
+        for j in "$d"/vim{.,-}* ; do
+            if [[ -e "$j" ]] ; then
+                echo "$j"
+            fi
+        done
+    done
+}
+
+function get_launcher_old() {
+    find -L \
+      {,/usr,/usr/local,/opt/*,$HOME,$HOME/.*,$HOME/.private,$HOME/.work,$HOME/.config/*}/{sbin,bin,.sbin,.bin,SBIN,BIN,.SBIN,.BIN}/ \
+      -samefile $HOME/.vim/bin/vim.wrapper 2>/dev/null \
+        | awk -F/ '{print $NF}' \
+        | sort -u \
+        | grep -v -e "^vim.wrapper$"
+}
+
+function get_vimrc_launcher() {
+    find /home/*/.vim/vimrc{.,-}* \
+         /home/*/.{private,work,config}{,/vim}/vimrc{.,-}* \
+         /home/*/.vimrc{.,-}* \
+        2>/dev/null \
+        | while read i ; do basename "$i" | sed "s/vimrc\([.-]\)/vim\1/g" ; done
+}
+
+function get_launcher() {
+    for i in $( get_vimrc_launcher ) ; do
+        if [[ ! -e $HOME/.vim/bin/$i ]] ; then
+            ln -s vim.wrapper "$HOME/.vim/bin/$i"
+        fi
+        echo "$i"
+    done
+}
+
+function toggle_config() {
+    echo -n
+}
+
+function get_configurations() {
+    # remove the ones from debian packages
+    # echo $( dpkg -S "bin*vim\.[a-z0-9]" | sed 's/^/ -e /g' | cut -f2 -d':' )
+    # sudo ls --color=never -d {/root,/home/*}/{,.,*,.*}vim{,.,*,.*} 2>/dev/null | sort -u #| sed "s/$HOME//g"
+    local vim_directories
+    vim_directories=$( ls --color=never -d /home/*/{,.,*,.*}vim{,.,*,.*} 2>/dev/null | grep -v "\.swp$" | sort -u )
+    for i in $vim_directories ; do
+        if echo "$i" | grep -q -e "\.viminfo" -e "swp" ; then
+            continue
+        fi
+
+        sudo ls "$i"/{,.,*,.*}rc{,.,*,.*} 2>/dev/null | while read i ; do
+            # echo "i : $i"
+            # echo "($( dirname "$i" ))"
+            f="$( basename "$i" | sed -e "s/vimrc-//g" -e "s/vimrc\.//g" )"
+            d="$( dirname "$i" )"
+            if echo "$f" | grep -q -i "\.swp" ; then
+                continue
+            else
+                echo "$f ($d)"
+            fi
+        done
+        # echo "$( basename "$i" | grep -v "\.viminfo" | sed -e "s/^\.//g" -e "s/^vim/default/g" -e "s/default\-//g" ) ($i)"
+    done | sort -u
+}
+
+function usage() {
+    local usage="vim.wrapper - Wrapper to start different vim setups (v${version})
+
+Usage: vim.wrapper [options] [file1] [file2] [...]
+   or: vim.wrapper [options] -
+$( for i in $( strip_path "$( get_vim_launchers )" ) ; do echo "   or: $i [...]" ; done  )
+
+This wrapper-script is not supposed to be called directly, but symlinked with
+names that refer to dedicated configurations and/or setups.
+
+Options and cmd args will be cleanly passed-through to vim if not directly
+catched by this script.
+
+To create a configuration/setup, either put a dedicated config file into your
+normal vim config directoy (e.g. ~/.vim/vimrc.XXX), use a complete config
+directory (e.g. ~/.vim-XXX/ or ~/vim-XXX/) or just hardcode it in the big case-
+statenment inside the wrapper script itself.
+
+To create a launcher for a configuration, simply link the wrapper script into
+your prefered bin/-directory (e.g. ln -s vim.wrapper ~/.vim/bin/vim.XXX). As
+long as you have a ~/.vim/bin/ directory, this script will also try to
+automatically generate all missing links for the configurations available.
+Therefore it should only be necessary to invoke the script (use --help or
+something) to have all symlinks in place.
+
+Configurations available at the moment:
+$( get_configurations | sed 's/^/ > /g' )
+
+This wrapper script is part of Simons Vim setup.
+Licence, Readme and the complete config can be found at github:
+ * https://github.com/simonschiele/dot.vim
+"
+    echo "$usage"
+}
+
+function vim_wrapper() {
+    local base=$( basename "$0" | cut -f2- -d. )
+    local home_dir=$( getent passwd | grep "^${SUDO_USER:-$USER}:" | cut -f6 -d: )
+    local config_dir="${home_dir}/.vim"
+    local config_file="vimrc.$base"
+
+    local version="0.3"
+
+    case $base in
+
+        help|wrapper|info)
+            usage
+        ;;
+
+        blank|stock|default|minimal|nothing)
+            # blank vim. No plugins, no config.
+            vim -N -u NONE -U NONE $@
+        ;;
+
+        *)
+            if [[ -r "$config_dir/$config_file" ]] ; then
+                eval vim -N -u "$config_dir/$config_file" -U "$config_dir/$config_file" "$*"
+            elif [[ -d "$config_dir"/../".vim-$base" ]] ; then
+                echo "Error: Different config dir found but base '$base' not implemented in wrapper and generic config wrapper is not implemented yet." >&2
+                exit 1
+            else
+                echo "Error: No dedicated config for '$base' found" >&2
+                exit 1
+            fi
+        ;;
+
+    esac
+}
+
+vim_wrapper "$*"
