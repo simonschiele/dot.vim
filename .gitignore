@@ -71,3 +71,8 @@ tags
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# spell
+spell/*.sug
+spell/*.spl
+spell/*.add
