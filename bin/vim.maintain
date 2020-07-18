@@ -1,0 +1,154 @@
+#!/bin/bash
+
+LANG=C
+set -e
+
+function error_exit() {
+    echo "ERROR: $1" >&2
+    exit ${2:-1}
+}
+
+function help() {
+    echo -e "vim.maintain [action]"
+    echo -e ""
+    echo -e "Setup helper for my vim config"
+    echo -e ""
+    echo -e "Actions:"
+    echo -e "\thelp\t\t"
+    echo -e "\tshow\t\t"
+    echo -e "\tupdate-plugins\t\t"
+    echo -e "\tinstall-depends\t\t"
+    echo -e ""
+    echo -e "Usage examples:"
+    echo -e ""
+    echo -e " # update plugin sub-repos:"
+    echo -e " > vim.maintain update-plugins"
+    echo -e ""
+    echo -e " # install all required depends:"
+    echo -e " > vim.maintain install-depends"
+    echo -e ""
+}
+
+function depends() {
+    local depends_name="$1"
+    local depends_type="${2:-bin}"
+    local available=false
+
+    case "$depends_type" in
+        bin|which|executable)
+            which "$depends_name" >/dev/null && available=true
+            ;;
+
+        dpkg|deb|debian|apt)
+            if ! depends dpkg ; then
+                error_exit 'please install dpkg if you want to check depends via dpkg'
+            fi
+            dpkg -l | grep -iq "^ii\ \ ${depends_name}\ " && available=true
+            ;;
+
+        pip)
+            local pip_version pip_output
+            if ! depends pip ; then
+                error_exit 'please install (python-)pip, to check depends via pip'
+            fi
+
+            pip_version=$( pip --version | awk '{print $2}' )
+            if ( es_check_version 1.3 "$pip_version" ) ; then
+                pip_output=$( pip show "$depends_name" 2>/dev/null | xargs | awk '{print $3"=="$5}' | sed '/^==$/d' )
+            else
+                pip_output=$( pip freeze 2>/dev/null | grep "^${depends_name}=" )
+            fi
+
+            [[ -n "$pip_output" ]] && available=true
+            ;;
+
+        *)
+            depends "$depends_name" bin && available=true
+            ;;
+    esac
+
+    $available
+    return
+}
+
+function update_plugins() {
+    local plugin directory name cmd_git
+    echo "Updating plugins:"
+
+    for plugin in "$REPO"/plugins/{,colors/,local/,syntax/,textobj/}*/.git ; do
+        if ( echo "$plugin" | grep -q -e "\*" ) ; then
+            continue
+        fi
+        directory=$( dirname "$plugin" )
+        name=$( basename "$directory" )
+        echo -e "\t$name"
+        cmd_git="git --git-dir=$plugin --work-tree=$directory"
+        if ( $cmd_git status | grep -q "modified" ) ; then
+            echo "Skipping '$name' because of local modified"
+            continue
+        fi
+        $cmd_git pull
+        #$cmd_git submodule update --init --recursive
+    done
+}
+
+function check_depends() {
+    false
+}
+
+function install_depends() {
+    error_exit "install_depends: not implemented" 2
+}
+
+function vim_status() {
+    echo "Name: $NAME"
+    echo "Config: $REPO"
+}
+
+function vim_maintain() {
+    local NAME=$( basename $0 )
+    local SCRIPTPATH=$( realpath $0 )
+    local SCRIPTDIR=$( dirname "$SCRIPTPATH" )
+    local REPO=$( dirname "$SCRIPTDIR" )
+
+    local action="$1"
+
+    if [[ -z "$action" ]] ; then
+        help
+        error_exit "Action required"
+    fi
+
+    case "$action" in
+
+        help)
+            help
+            exit 0
+        ;;
+
+        update-plugins)
+            update_plugins
+        ;;
+
+        install-depends)
+            if ! check_depends ; then
+                install_depends
+            fi
+        ;;
+
+        show|info|list)
+            vim_status
+        ;;
+
+        completion)
+            echo "show install-depends update-plugins"
+        ;;
+
+
+        *)
+            error_exit "Unknown action: $action"
+        ;;
+
+    esac
+}
+
+vim_maintain "$*"
