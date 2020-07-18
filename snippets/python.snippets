@@ -1,0 +1,21 @@
+snippet #!
+	#!/usr/bin/env python
+	# -*- coding: utf-8 -*-
+snippet #!2
+	#!/usr/bin/env python2
+	# -*- coding: utf-8 -*-
+snippet #!3
+	#!/usr/bin/env python3
+	# -*- coding: utf-8 -*-
+snippet try Try/Except/Else/Finally
+	try:
+		${1:${VISUAL}}
+	except ${2:Exception} as ${3:e}:
+		${4:raise $3}
+	else:
+		${5}
+	finally:
+		${0}
+snippet main __name__ == '__main__'
+	if __name__ == '__main__':
+		${0:main()}
