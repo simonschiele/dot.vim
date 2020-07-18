@@ -1,10 +1,73 @@
-# typical vim leftovers
+# tmp/ rules (swap, tmp, undo, view, viminfo, ...)
+tmp/**
+
+# test stuff
+# should do this as a subrepo one day...
+tests/
+
+# local/untracked plugins/-directories
+plugins/local/
+plugins/unused/
+
+# local/untracked config overwrites
+vimrc.local
+vimrc.custom
+vimrc.private
+vimrc.work
+
+# my typicl 'archive'-directories
+.ARCHIVE/
+.OLD/
+ARCHIVE/
+OLD/
+old/
+_ARCHIVE/
+_archive/
+_OLD/
+
+# vim swap
 [._]*.s[a-v][a-z]
+!*.svg              # fix previous patterns unwanted side-effect
 [._]*.sw[a-p]
-[._]s[a-v][a-z]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
 [._]sw[a-p]
-Session.vim
-.netrwhist
+
+# vim temporary files
 *~
+
+# vim undo
+[._]*.un~
+
+# typical vim leftovers
+Session.vim
+Sessionx.vim
+.netrwhist
+
+# tags (etags, ctags, gtags, cscope, ...)
+TAGS
+.TAGS
+!TAGS/
 tags
 .tags
+!tags/
+gtags.files
+GTAGS
+GRTAGS
+GPATH
+GSYMS
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+tags
+.tags
+
+# external annoyances
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
