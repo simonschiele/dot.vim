@@ -502,7 +502,7 @@ map <S-F6> :echo 'shift-cleanup not configured for filetype' &filetype<CR>
 map <C-S-F6> :echo 'ctrl-shift-cleanup not configured for filetype' &filetype<CR>
 
 " <F7> Toggle spellcheck / switch languages
-nnoremap <F7> :<C-U>call functions#SpellToggle()<CR>
+nnoremap <F7> :<C-U>call spell#SpellToggle()<CR>
 
 "nnoremap <silent> <F8> :SyntasticCheck<CR>
 "nnoremap <silent> <S-F8> :SyntasticCheckToggle<CR>

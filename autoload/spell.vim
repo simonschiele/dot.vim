@@ -2,7 +2,7 @@
 let s:myLang = 0
 let s:myLangList = ['nospell', 'en', 'de']
 
-function! functions#SpellToggle()
+function! spell#SpellToggle()
   let s:myLang = s:myLang + 1
   if s:myLang >= len(s:myLangList) | let s:myLang = 0 | endif
 
