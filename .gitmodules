@@ -1,3 +1,48 @@
 [submodule "plugins/pathogen"]
 	path = plugins/pathogen
 	url = https://github.com/tpope/vim-pathogen
+[submodule "plugins/ale"]
+	path = plugins/ale
+	url = https://github.com/dense-analysis/ale
+[submodule "plugins/buftabline"]
+	path = plugins/buftabline
+	url = https://github.com/ap/vim-buftabline
+[submodule "plugins/css-coloresque"]
+	path = plugins/css-coloresque
+	url = https://github.com/gko/vim-coloresque
+[submodule "plugins/clean/vim-sensible"]
+	path = plugins/clean/vim-sensible
+	url = https://github.com/tpope/vim-sensible
+[submodule "plugins/colors/gruvbox"]
+	path = plugins/colors/gruvbox
+	url = https://github.com/morhetz/gruvbox
+[submodule "plugins/colors/nord-vim"]
+	path = plugins/colors/nord-vim
+	url = https://github.com/arcticicestudio/nord-vim
+[submodule "plugins/colors/solarized"]
+	path = plugins/colors/solarized
+	url = https://github.com/altercation/vim-colors-solarized
+[submodule "plugins/colors/tender"]
+	path = plugins/colors/tender
+	url = https://github.com/jacoborus/tender.vim
+[submodule "plugins/vim-devicons"]
+	path = plugins/vim-devicons
+	url = https://github.com/ryanoasis/vim-devicons
+[submodule "plugins/vim-ripgrep"]
+	path = plugins/vim-ripgrep
+	url = https://github.com/jremmen/vim-ripgrep
+[submodule "plugins/syntax/i3config"]
+	path = plugins/syntax/i3config
+	url = https://github.com/mboughaba/i3config.vim
+[submodule "plugins/git-fugitive"]
+	path = plugins/git-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule "plugins/nerdtree"]
+	path = plugins/nerdtree
+	url = https://github.com/preservim/nerdtree
+[submodule "plugins/startify"]
+	path = plugins/startify
+	url = https://github.com/mhinz/vim-startify
+[submodule "plugins/tagbar"]
+	path = plugins/tagbar
+	url = https://github.com/majutsushi/tagbar
