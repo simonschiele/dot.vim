@@ -1,0 +1,15 @@
+snippet array
+	declare -A aa
+	aa=([hello]=world [ab]=cd)
+	aa[bc]=xy
+	aa[ab]=cd
+snippet skel
+	#!/bin/bash
+
+	LANG=C
+
+	function main() {
+		${0}
+	}
+
+	main "$@"
