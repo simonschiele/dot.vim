@@ -43,7 +43,7 @@ function! statusline#CustomFileinfo()
 endfunction
 
 function! statusline#CustomLineinfo()
-    return col('.') . '/' . line('.') . ', ' . line('$')
+    return col('.') . ' ' . line('.') . '/' . line('$')
 endfunction
 
 function! statusline#CustomGitinfo()
