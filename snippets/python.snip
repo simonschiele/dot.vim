@@ -1,12 +1,7 @@
-snippet #!
-	#!/usr/bin/env python
-	# -*- coding: utf-8 -*-
-snippet #!2
-	#!/usr/bin/env python2
-	# -*- coding: utf-8 -*-
-snippet #!3
+snippet shebang
 	#!/usr/bin/env python3
 	# -*- coding: utf-8 -*-
+	${0}
 snippet try Try/Except/Else/Finally
 	try:
 		${1:${VISUAL}}
@@ -19,6 +14,6 @@ snippet try Try/Except/Else/Finally
 snippet main __name__ == '__main__'
 	if __name__ == '__main__':
 		${0:main()}
-snippet debugger
+snippet debug
 	import ipdb
 	ipdb.set_trace();
