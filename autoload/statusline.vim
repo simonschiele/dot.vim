@@ -48,7 +48,7 @@ endfunction
 
 function! statusline#CustomGitinfo()
     let branch = FugitiveHead()
-    if branch !=# 'master'
+    if branch !=# 'master' && branch !=# 'main'
         return branch
     else
         return ''
