@@ -49,3 +49,6 @@
 [submodule "plugins/colors/inkpot"]
 	path = plugins/colors/inkpot
 	url = https://github.com/ciaranm/inkpot
+[submodule "plugins/nerdcommenter"]
+	path = plugins/nerdcommenter
+	url = https://github.com/preservim/nerdcommenter
