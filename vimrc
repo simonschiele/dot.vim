@@ -455,6 +455,8 @@ endif
 " insert hardtab even in "softtab-mode" (Alt+Tab)
 " todo: fix. worked on shift is somehow broken on alt.
 " i(nore)map <M-Tab> <C-V><Tab>
+nnoremap <S-Tab> <C-V><Tab>
+inoremap <S-Tab> <C-V><Tab>
 
 " switch buffer (Ctrl+PageUp/Down)
 nnoremap <silent> <C-PageDown> :bn<CR>
